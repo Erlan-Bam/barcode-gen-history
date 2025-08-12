@@ -39,6 +39,7 @@ export class BarcodeService {
             url: true,
             type: true,
             editFlag: true,
+            userId: true,
           },
           take: limit,
         }),

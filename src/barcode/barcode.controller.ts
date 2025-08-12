@@ -9,15 +9,11 @@ import {
 } from '@nestjs/common';
 import { BarcodeService } from './barcode.service';
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiTags,
-  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { GetHistoryDto } from './dto/get-history.dto';
 import { AuthGuard } from '@nestjs/passport';
