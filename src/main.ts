@@ -1,13 +1,24 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { BadRequestException, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import helmet from 'helmet';
 async function bootstrap() {
+  const frontendURL = process.env.FRONTEND_URL;
+  if (!frontendURL) {
+    throw new Error('FRONTEND_URL is not defined in environment variables');
+  }
   const app = await NestFactory.create(AppModule);
+  const logger = new Logger('Bootstrap');
 
   app.setGlobalPrefix('api');
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: { policy: 'cross-origin' }, // для Swagger static
+    }),
+  );
   app.enableCors({
-    origin: ['http://localhost:3000'],
+    origin: [frontendURL],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: [
       'Content-Type',
@@ -73,7 +84,7 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
       transform: true,
       exceptionFactory: (errors) => {
-        console.error(errors);
+        logger.error(errors);
         return new BadRequestException(errors);
       },
     }),
