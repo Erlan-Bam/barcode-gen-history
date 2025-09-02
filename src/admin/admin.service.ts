@@ -107,7 +107,7 @@ export class AdminService {
         throw new HttpException('Barcode not found', 404);
       }
 
-      await this.prisma.barcode.update({
+      const updatedBarcode = await this.prisma.barcode.update({
         where: { id: id },
         data: { editFlag: data.status },
       });
@@ -115,7 +115,7 @@ export class AdminService {
       this.logger.log(
         `Barcode successfully edited with id=${id}, status=${data.status}`,
       );
-      return barcode;
+      return { barcode: updatedBarcode };
     } catch (error) {
       if (error instanceof HttpException) throw error;
       this.logger.error(

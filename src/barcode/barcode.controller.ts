@@ -71,7 +71,10 @@ export class BarcodeController {
     description: 'Barcode ID',
     schema: { type: 'string', format: 'uuid' },
   })
-  async getStatus(@Param('id') id: string, @User('id') userId: string) {
+  async getStatus(
+    @Param('id', ParseUUIDPipe) id: string,
+    @User('id') userId: string,
+  ) {
     return this.barcodeService.getStatus(id, userId);
   }
 
