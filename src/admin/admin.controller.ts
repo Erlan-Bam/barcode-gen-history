@@ -46,15 +46,35 @@ export class AdminController {
   }
 
   @Delete('barcodes/:id')
-  async deleteBarcode(@Param('id', ParseUUIDPipe) id: string) {
-    return this.adminService.deleteBarcode(id);
+  async deleteBarcode(
+    @Param('id', ParseUUIDPipe) id: string,
+    @User('id') adminId: string,
+  ) {
+    try {
+      this.logger.log(
+        `Attempting to delete barcode with id=${id} by adminId=${adminId}`,
+      );
+      return this.adminService.deleteBarcode(id);
+    } catch (error) {
+      this.logger.error(`Error deleting barcode with id=${id}: ${error}`);
+      throw error;
+    }
   }
 
   @Patch('status/:id')
   async editStatus(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() data: EditStatusDto,
+    @User('id') adminId: string,
   ) {
-    return this.adminService.editStatus(id, data);
+    try {
+      this.logger.log(
+        `Attempting to edit barcode status with id=${id} by adminId=${adminId}`,
+      );
+      return this.adminService.editStatus(id, data);
+    } catch (error) {
+      this.logger.error('Error in edit barcode status: ' + error);
+      throw error;
+    }
   }
 }
