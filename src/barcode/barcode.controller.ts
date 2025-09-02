@@ -20,8 +20,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/shared/decorator/user.decorator';
 
 @ApiTags('Barcode')
-@ApiBearerAuth() // показывает, что требуется JWT
-@Controller('barcode')
+@ApiBearerAuth()
+@Controller('barcodes')
 @UseGuards(AuthGuard('jwt'))
 export class BarcodeController {
   constructor(private readonly barcodeService: BarcodeService) {}
