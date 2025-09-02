@@ -2,6 +2,7 @@ import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/shared/services/prisma.service';
 import { GetBarcodesDto } from './dto/get-barcodes.dto';
 import { EditStatusDto } from './dto/edit-status.dto';
+import { GetBarcodeDto } from './dto/get-barcode.dto';
 
 @Injectable()
 export class AdminService {
@@ -41,6 +42,31 @@ export class AdminService {
     } catch (error) {
       this.logger.error(
         `Error in Admin get barcodes: userId=${data.userId}, error: ${error}`,
+      );
+      throw new HttpException('Error occured in admin get barcodes', 500);
+    }
+  }
+
+  async getBarcode(data: GetBarcodeDto) {
+    try {
+      const { barcodeId } = data;
+
+      const barcode = await this.prisma.barcode.findUnique({
+        where: {
+          id: barcodeId,
+        },
+      });
+
+      if (!barcode) {
+        throw new HttpException('Barcode not found', 404);
+      }
+
+      return {
+        barcode: barcode,
+      };
+    } catch (error) {
+      this.logger.error(
+        `Error in Admin get barcode: barcodeId=${data.barcodeId}, error: ${error}`,
       );
       throw new HttpException('Error occured in admin get barcodes', 500);
     }

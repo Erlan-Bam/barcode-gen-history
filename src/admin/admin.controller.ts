@@ -16,6 +16,7 @@ import { AdminGuard } from './guards/admin.guard';
 import { GetBarcodesDto } from './dto/get-barcodes.dto';
 import { User } from 'src/shared/decorator/user.decorator';
 import { EditStatusDto } from './dto/edit-status.dto';
+import { GetBarcodeDto } from './dto/get-barcode.dto';
 
 @Controller('admin')
 @UseGuards(AuthGuard('jwt'), AdminGuard)
@@ -31,6 +32,15 @@ export class AdminController {
     const barcodes = await this.adminService.getBarcodes(data);
     this.logger.log(
       `Admin with adminId=${adminId}, successfully got userId=${data.userId} barcodes`,
+    );
+    return barcodes;
+  }
+
+  @Get('barcodes/:id')
+  async getBarcode(@Param() data: GetBarcodeDto, @User('id') adminId: string) {
+    const barcodes = await this.adminService.getBarcode(data);
+    this.logger.log(
+      `Admin with adminId=${adminId}, successfully got barcodeId=${data.barcodeId} barcodes`,
     );
     return barcodes;
   }
